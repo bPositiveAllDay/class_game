@@ -1,6 +1,14 @@
 require './player'
 require 'colorize'
 
+
+class InvalidInput < StandardError
+  def message
+    "Invalid input"
+  end
+end
+
+
 @players = []
 
   def create_players(number_of_players)
@@ -31,7 +39,17 @@ require 'colorize'
 
   def ask(player)
     print "#{player.name}, what is #{@num1} #{@op} #{@num2}? "
-    @answer = gets.chomp.to_i
+
+    @answer_raw = gets.chomp
+    begin
+      if @answer_raw.match(/[0-9]+/).nil?
+        raise InvalidInput
+      end
+      rescue InvalidInput => e
+        puts e.message 
+        ask(player)
+      end
+      @answer = @answer_raw.to_i
   end
 
 
